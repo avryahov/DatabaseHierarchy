@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.reflections.Reflections;
 
+import java.util.Set;
+
 /**
  * @author Aleksandr Rjakhov
  */
@@ -25,9 +27,11 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-    private static void addAnnotatedClasses(final Configuration configuration) {
-        Reflections reflections = new Reflections("ru.ryahov.training.db.domain");
-        reflections.getSubTypesOf(Model.class).forEach(configuration::addAnnotatedClass);
+    private static void addAnnotatedClasses(Configuration configuration) {
+        Reflections reflections = new Reflections("com.ryahov.training.db.domain");
+        Set<Class<? extends Model>> models = reflections.getSubTypesOf(Model.class);
+        for (Class<? extends Model> model : models) {
+            configuration.addAnnotatedClass(model);
+        }
     }
-
 }
